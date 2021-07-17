@@ -1,5 +1,7 @@
 package simulator
 
+// MoveController is designed to operate a single elevator with a single actor at a time.  Designed specifically for
+// testing and not actual use.  Demonstrates basic interactions with of an Controller with the Simulation.
 type MoveController struct {
 	simulation ControlledElevators
 	elevatorID int
