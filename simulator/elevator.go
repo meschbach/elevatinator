@@ -1,0 +1,66 @@
+package simulator
+
+const (
+	Idle = iota
+	MovingUp
+	MovingDown
+)
+
+type Elevator struct {
+	state       int
+	moveToFloor int
+
+	capacity     int8
+	currentFloor int
+	//TODO: Probably better as event stream for controller
+	desiredFloors []int
+}
+
+func NewElevator(capacity int8) *Elevator {
+	return &Elevator{
+		state:         Idle,
+		capacity:      capacity,
+		currentFloor:  0,
+		desiredFloors: make([]int, 0),
+	}
+}
+
+func (e *Elevator) Tick(s *Simulation, id int, tick Tick) {
+	switch e.state {
+	case MovingUp:
+		e.currentFloor++
+		e.maybeDoneMoving(s, id)
+	case MovingDown:
+		e.currentFloor--
+		e.maybeDoneMoving(s, id)
+	}
+}
+
+func (e *Elevator) maybeDoneMoving(s *Simulation, id int) {
+	if e.currentFloor == e.moveToFloor {
+		e.state = Idle
+		s.elevatorDoneMoving(id)
+	}
+}
+
+func (e *Elevator) move(s *Simulation, id int, floors int) {
+	switch e.state {
+	case Idle:
+		e.moveToFloor = e.currentFloor + floors
+		if floors > 0 {
+			e.state = MovingUp
+		} else if floors < 0 {
+			e.state = MovingDown
+		} else {
+			e.maybeDoneMoving(s, id)
+		}
+	}
+}
+
+func (e *Elevator) isAtFloor(s *Simulation, floor FloorID) bool {
+	switch e.state {
+	case Idle:
+		return e.currentFloor == int(floor)
+	}
+	return false
+}
