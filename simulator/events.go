@@ -34,7 +34,7 @@ type Event struct {
 	points   int
 }
 
-type SimulatorControllerListener interface {
+type ControllerListener interface {
 	OnControllerEvent(event Event)
 }
 

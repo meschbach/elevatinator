@@ -9,7 +9,7 @@ type Simulation struct {
 	actors              []*Actor
 	enteredActors       []*actorState
 	controller          Controller
-	controllerListeners []SimulatorControllerListener
+	controllerListeners []ControllerListener
 }
 
 func (s *Simulation) Tick() bool {
@@ -182,7 +182,7 @@ func (s *Simulation) dispatchControllerEvent(event Event) {
 }
 
 //TODO: Multithreading
-func (s *Simulation) AttachControllerListener(listener SimulatorControllerListener) {
+func (s *Simulation) AttachControllerListener(listener ControllerListener) {
 	s.controllerListeners = append(s.controllerListeners, listener)
 }
 
@@ -192,7 +192,7 @@ func NewSimulation() *Simulation {
 		elevators:           make([]*Elevator, 0),
 		floors:              make([]*Floor, 0),
 		actors:              make([]*Actor, 0),
-		controllerListeners: make([]SimulatorControllerListener, 0),
+		controllerListeners: make([]ControllerListener, 0),
 	}
 	return s
 }
