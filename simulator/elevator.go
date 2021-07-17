@@ -43,6 +43,11 @@ func (e *Elevator) maybeDoneMoving(s *Simulation, id int) {
 	}
 }
 
+func (e *Elevator) moveTo(s *Simulation, id int, floor int) {
+	distance := floor - e.currentFloor
+	e.move(s,id,distance)
+}
+
 func (e *Elevator) move(s *Simulation, id int, floors int) {
 	switch e.state {
 	case Idle:

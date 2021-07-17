@@ -79,3 +79,17 @@ func TestActorsNotCompletedAtStart(t *testing.T) {
 		t.Errorf("Game completed before initialized")
 	}
 }
+
+func TestElevatorsMoveDown(t *testing.T) {
+	maxTicks := Tick(10)
+	s := NewSimulation()
+	s.AttachActor(NewActor(0, 1, 0))
+
+	s.Initialize(1,2)
+	s.AttachControllerFunc(NewMoveController)
+	endTick := s.TickUpTo(maxTicks)
+
+	if endTick >= maxTicks {
+		t.Errorf("Exceeded tick count @ %d", s.tick)
+	}
+}

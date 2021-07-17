@@ -1,20 +1,20 @@
 package main
 
 import (
-	"github.com/meschbach/elevatinator/simulator"
 	"fmt"
+	"github.com/meschbach/elevatinator/simulator"
 )
 
 func main() {
 	stream := simulator.NewEventLog()
-	maxTicks := simulator.Tick(100)
+	maxTicks := simulator.Tick(20)
 
 	simulation := simulator.NewSimulation()
 	simulation.AttachControllerListener(stream)
 	simulation.AttachActor(simulator.NewActor(3,0,0))
-	//simulation.AttachActor(simulator.NewActor(2,0,0))
-	//simulation.AttachActor(simulator.NewActor(0,1,1))
-	simulation.Initialize(1, 4)
+	simulation.AttachActor(simulator.NewActor(2,0,8))
+	simulation.AttachActor(simulator.NewActor(0,1,17))
+	simulation.Initialize(1, 5)
 	simulation.AttachControllerFunc(simulator.NewMoveController)
 
 	tick := simulation.TickUpTo(maxTicks)

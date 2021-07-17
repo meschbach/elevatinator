@@ -63,8 +63,9 @@ func (s *Simulation) AttachControllerFunc(factory ControllerFunc) {
 	s.controller.Init(ids)
 }
 
-func (s *Simulation) MoveTo(elevatorID int, floors int) {
-	s.elevators[elevatorID].move(s, elevatorID, floors)
+func (s *Simulation) MoveTo(elevatorID int, floor int) {
+	elevator := s.elevators[elevatorID]
+	elevator.moveTo(s, elevatorID, floor)
 }
 
 const (

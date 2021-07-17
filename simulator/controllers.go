@@ -8,6 +8,6 @@ type Controller interface {
 }
 
 type ControlledElevators interface {
-	// issues a move command to the elevator, returning ticks until completion
-	MoveTo(elevatorID int, floorCount int)
+	// MoveTo instructs the given elevator to go to the specified target floor.
+	MoveTo(elevatorID int, floor int)
 }
