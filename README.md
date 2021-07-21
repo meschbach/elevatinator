@@ -30,10 +30,10 @@ func NewStrategy(elevators simulator.ControlledElevators) simulator.Controller {
 	return &MyStrategy{}
 }
 
-func (m *MyStrategy) Init(elevators []int) {}
-func (m *MyStrategy) Called(floor int) {}
-func (m *MyStrategy) FloorSelected(elevatorID int, floor int) { }
-func (m *MyStrategy) CompletedMove(elevatorID int) {}
+func (m *MyStrategy) Init(elevators []simulator.ElevatorID) {}
+func (m *MyStrategy) Called(floor simulator.FloorID) {}
+func (m *MyStrategy) FloorSelected(elevatorID simulator.ElevatorID, floor simulator.FloorID) { }
+func (m *MyStrategy) CompletedMove(elevatorID simulator.ElevatorID) {}
 ```
 
 This allows you to plugin to the simulation.  Additionally, you'll need to modify `main.go` from
