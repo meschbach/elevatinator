@@ -13,8 +13,8 @@ type Simulation struct {
 }
 
 func (s *Simulation) Tick() bool {
-	s.tick++
 	currentTick := s.tick
+	s.tick++
 	s.dispatchControllerEvent(OnTickStart(currentTick))
 	for i, elevator := range s.elevators {
 		elevator.Tick(s, i, currentTick)
@@ -56,16 +56,16 @@ type ControllerFunc func(ControlledElevators) Controller
 
 func (s *Simulation) AttachControllerFunc(factory ControllerFunc) {
 	s.controller = factory(s)
-	ids := make([]int, len(s.elevators))
+	ids := make([]ElevatorID, len(s.elevators))
 	for i := range s.elevators {
-		ids[i] = i
+		ids[i] = ElevatorID(i)
 	}
 	s.controller.Init(ids)
 }
 
-func (s *Simulation) MoveTo(elevatorID int, floor int) {
+func (s *Simulation) MoveTo(elevatorID ElevatorID, floor FloorID) {
 	elevator := s.elevators[elevatorID]
-	elevator.moveTo(s, elevatorID, floor)
+	elevator.moveTo(s, int(elevatorID), int(floor))
 }
 
 const (
@@ -139,15 +139,15 @@ func (s *Simulation) PressButton(actorID int, floor int) {
 	switch state.placeType {
 	case PlaceElevator:
 		elevator := s.elevators[state.placeIndex]
-		s.controller.FloorSelected(state.placeIndex, floor)
+		s.controller.FloorSelected(ElevatorID(state.placeIndex), FloorID(floor))
 		elevator.desiredFloors = append(elevator.desiredFloors, floor)
 		s.dispatchControllerEvent(OnElevatorFloorRequest(s.tick,ElevatorID(state.placeIndex),FloorID(floor)))
 	}
 }
 
-func (s *Simulation) elevatorDoneMoving(elevatorID int) {
+func (s *Simulation) elevatorDoneMoving(elevatorID ElevatorID) {
 	for i, a := range s.enteredActors {
-		if a.placeType == PlaceElevator && a.placeIndex == elevatorID {
+		if a.placeType == PlaceElevator && a.placeIndex == int(elevatorID) {
 			s.actors[i].elevatorStopped(s, s.tick, s.elevators[elevatorID].currentFloor)
 			s.dispatchControllerEvent(OnElevatorArrived(s.tick,ElevatorID(elevatorID),FloorID(s.elevators[elevatorID].currentFloor)))
 		}
@@ -157,7 +157,7 @@ func (s *Simulation) elevatorDoneMoving(elevatorID int) {
 
 func (s *Simulation) callElevator(floor int) {
 	s.dispatchControllerEvent(OnElevatorCalled(s.tick, FloorID(floor)))
-	s.controller.Called(floor)
+	s.controller.Called(FloorID(floor))
 }
 
 func (s *Simulation) Initialize(elevators int, floors int) {

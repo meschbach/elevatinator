@@ -8,7 +8,6 @@ type FloorID int
 type ElevatorID int
 
 const (
-	//No operands
 	TickStart = iota
 	TickDone
 
@@ -25,13 +24,13 @@ const (
 )
 
 type Event struct {
-	eventType EventType
-	timestamp Tick
+	EventType EventType
+	Timestamp Tick
 
-	entity   EntityID
-	elevator ElevatorID
-	floor    FloorID
-	points   int
+	Entity   EntityID
+	Elevator ElevatorID
+	Floor    FloorID
+	Points   int
 }
 
 type ControllerListener interface {
@@ -39,106 +38,106 @@ type ControllerListener interface {
 }
 
 func (e Event) ToString() string {
-	switch e.eventType {
+	switch e.EventType {
 	case TickStart:
-		return fmt.Sprintf("Event{TickStart,%d}", e.timestamp)
+		return fmt.Sprintf("Event{TickStart,%d}", e.Timestamp)
 	case TickDone:
-		return fmt.Sprintf("Event{TickDone,%d}", e.timestamp)
+		return fmt.Sprintf("Event{TickDone,%d}", e.Timestamp)
 	case InitStart:
 		return fmt.Sprintf("Event{InitStart}")
 	case InitDone:
 		return fmt.Sprintf("Event{InitDone}")
 	case InformElevator:
-		return fmt.Sprintf("Event{InformElevator, %d}", e.elevator)
+		return fmt.Sprintf("Event{InformElevator, %d}", e.Elevator)
 	case InformFloor:
-		return fmt.Sprintf("Event{InformFloor, %d}", e.floor)
+		return fmt.Sprintf("Event{InformFloor, %d}", e.Floor)
 	case ElevatorCalled:
-		return fmt.Sprintf("Event{ElevatorCall, %d}", e.floor)
+		return fmt.Sprintf("Event{ElevatorCall, %d}", e.Floor)
 	case ElevatorArrived:
-		return fmt.Sprintf("Event{ElevatorArrived, %d @ %d}", e.elevator, e.floor)
+		return fmt.Sprintf("Event{ElevatorArrived, %d @ %d}", e.Elevator, e.Floor)
 	case ElevatorFloorRequest:
-		return fmt.Sprintf("Event{ElevatorFloorRequest, %d @ %d}", e.elevator, e.floor)
+		return fmt.Sprintf("Event{ElevatorFloorRequest, %d @ %d}", e.Elevator, e.Floor)
 	case ActorFinished:
-		return fmt.Sprintf("Event{ActorFinished, point: %d}", e.points)
+		return fmt.Sprintf("Event{ActorFinished, point: %d}", e.Points)
 	default:
-		return fmt.Sprintf("Unkonwn event type %d: %#v", e.eventType, e)
+		return fmt.Sprintf("Unkonwn event type %d: %#v", e.EventType, e)
 	}
 }
 
 func OnTickStart(tick Tick) Event {
 	return Event{
-		eventType: TickStart,
-		timestamp: tick,
+		EventType: TickStart,
+		Timestamp: tick,
 	}
 }
 
 func OnTickDone(tick Tick) Event {
 	return Event{
-		eventType: TickDone,
-		timestamp: tick,
+		EventType: TickDone,
+		Timestamp: tick,
 	}
 }
 
 func OnInitStart() Event {
 	return Event{
-		eventType: InitStart,
-		timestamp: -1,
+		EventType: InitStart,
+		Timestamp: -1,
 	}
 }
 
 func OnInitDone() Event {
 	return Event{
-		eventType: InitDone,
-		timestamp: -1,
+		EventType: InitDone,
+		Timestamp: -1,
 	}
 }
 
 func OnInformElevator(id ElevatorID) Event {
 	return Event{
-		eventType: InformElevator,
-		timestamp: -1,
-		elevator:  id,
+		EventType: InformElevator,
+		Timestamp: -1,
+		Elevator:  id,
 	}
 }
 
 func OnInformFloor(id FloorID) Event {
 	return Event{
-		eventType: InformFloor,
-		timestamp: -1,
-		floor:     id,
+		EventType: InformFloor,
+		Timestamp: -1,
+		Floor:     id,
 	}
 }
 
 func OnElevatorArrived(tick Tick, elevator ElevatorID, floor FloorID) Event {
 	return Event{
-		eventType: ElevatorArrived,
-		timestamp: tick,
-		elevator:  elevator,
-		floor:     floor,
+		EventType: ElevatorArrived,
+		Timestamp: tick,
+		Elevator:  elevator,
+		Floor:     floor,
 	}
 }
 
 func OnElevatorCalled(tick Tick, floor FloorID) Event {
 	return Event{
-		eventType: ElevatorCalled,
-		timestamp: tick,
-		floor:     floor,
+		EventType: ElevatorCalled,
+		Timestamp: tick,
+		Floor:     floor,
 	}
 }
 
 func OnElevatorFloorRequest(tick Tick, elevator ElevatorID, floor FloorID) Event {
 	return Event{
-		eventType: ElevatorFloorRequest,
-		timestamp: tick,
-		elevator:  elevator,
-		floor:     floor,
+		EventType: ElevatorFloorRequest,
+		Timestamp: tick,
+		Elevator:  elevator,
+		Floor:     floor,
 	}
 }
 
 func OnActorFinished(tick Tick, points int) Event {
 	return Event{
-		eventType: ActorFinished,
-		timestamp: tick,
-		points: points,
+		EventType: ActorFinished,
+		Timestamp: tick,
+		Points: points,
 	}
 }

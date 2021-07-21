@@ -39,7 +39,7 @@ func (e *Elevator) Tick(s *Simulation, id int, tick Tick) {
 func (e *Elevator) maybeDoneMoving(s *Simulation, id int) {
 	if e.currentFloor == e.moveToFloor {
 		e.state = Idle
-		s.elevatorDoneMoving(id)
+		s.elevatorDoneMoving(ElevatorID(id))
 	}
 }
 

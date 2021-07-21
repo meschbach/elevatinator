@@ -4,7 +4,7 @@ package simulator
 // testing and not actual use.  Demonstrates basic interactions with of an Controller with the Simulation.
 type MoveController struct {
 	simulation ControlledElevators
-	elevatorID int
+	elevatorID ElevatorID
 }
 
 func NewMoveController(elevators ControlledElevators) Controller {
@@ -14,14 +14,14 @@ func NewMoveController(elevators ControlledElevators) Controller {
 	}
 }
 
-func (m *MoveController) Init(elevators []int) {
+func (m *MoveController) Init(elevators []ElevatorID) {
 	m.elevatorID = elevators[0]
 }
 
-func (m *MoveController) Called(floor int) {
+func (m *MoveController) Called(floor FloorID) {
 	m.simulation.MoveTo(m.elevatorID, floor)
 }
-func (m *MoveController) FloorSelected(elevatorID int, floor int) {
+func (m *MoveController) FloorSelected(elevatorID ElevatorID, floor FloorID) {
 	m.simulation.MoveTo(m.elevatorID, floor)
 }
-func (m *MoveController) CompletedMove(elevatorID int) {}
+func (m *MoveController) CompletedMove(elevatorID ElevatorID) {}
