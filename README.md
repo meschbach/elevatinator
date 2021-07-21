@@ -37,7 +37,7 @@ func (m *MyStrategy) CompletedMove(elevatorID int) {}
 ```
 
 This allows you to plugin to the simulation.  Additionally, you'll need to modify `main.go` from
-`simulation.AttachControllerFunc(simulator.NewMoveController)` *to* `simulation.AttachControllerFunc(NewStrategy)`
+`scenarios.RunScenario(simulator.NewMoveController, scenarios.MultipleUpAndBack)` *to* `scenarios.RunScenario(NewStrategy, scenarios.MultipleUpAndBack)`
 
 Check out [simulator/movecontroller.go](simulator/movecontroller.go) for  examples on how to move elevators!
 
