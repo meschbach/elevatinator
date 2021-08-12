@@ -33,6 +33,8 @@ func RunScenario(factory simulator.ControllerFunc, scenario Scenario)  {
 	}
 }
 
+// TestScenario integrates with Go's built-in testing framework to assert a given controller is able to complete the
+// given scenario.  This is useful for functional level integration testing with Controllers.
 func TestScenario(t *testing.T, factory simulator.ControllerFunc, scenario Scenario)  {
 	stream := simulator.NewEventLog()
 
