@@ -6,8 +6,13 @@ import (
 	"testing"
 )
 
+// Scenario configures a simulation for a specific puzzle.  A Scenario provides the maximum number of possible ticks to
+// allow a controller to run for all simulation.Actors to win.
 type Scenario func(simulation *simulator.Simulation)simulator.Tick
 
+// RunScenario runs the given scenario against the controller produced via the factory.  If the controller completes the
+// scenario in less than the maximum allowed ticks then the count is produced.  Otherwise the event log from the run is
+// written out.
 func RunScenario(factory simulator.ControllerFunc, scenario Scenario)  {
 	stream := simulator.NewEventLog()
 
