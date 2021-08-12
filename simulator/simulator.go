@@ -2,6 +2,9 @@ package simulator
 
 type Tick int64
 
+// Simulation encapsulates game state over time.
+//
+// An instance of Simulation is not guaranteed to be thread safe.
 type Simulation struct {
 	tick                Tick
 	elevators           []*Elevator
@@ -12,6 +15,11 @@ type Simulation struct {
 	controllerListeners []ControllerListener
 }
 
+// Tick advances the simulation by a single tick.  For each tick the following occurs:
+//  * elevators are notified
+//  * actors are notified
+//
+// True is returned if all existing actors have completed their objectives
 func (s *Simulation) Tick() bool {
 	currentTick := s.tick
 	s.tick++
@@ -27,6 +35,10 @@ func (s *Simulation) Tick() bool {
 	return !s.ActorsCompletedObjectives()
 }
 
+// TickUpTo advances the Simulation by up to the additional count of ticks or all actors have completed their objectives,
+// which ever occurs first.
+//
+// Current simulation tick is returned as a result.
 func (s *Simulation) TickUpTo(additional Tick) Tick {
 	endTick := s.tick + additional
 	for s.tick < endTick && s.Tick() {
@@ -34,6 +46,8 @@ func (s *Simulation) TickUpTo(additional Tick) Tick {
 	return s.tick
 }
 
+// ActorsCompletedObjectives checks if all registered actors have completed their objectives.  If all actors have
+// completed their objectives then true is returned, otherwise false.
 func (s *Simulation) ActorsCompletedObjectives() bool {
 	//TODO: Ideally there is a better way to structure this
 	for _, actor := range s.actors {
@@ -44,6 +58,9 @@ func (s *Simulation) ActorsCompletedObjectives() bool {
 	return true
 }
 
+// CurrentTick provides the tick the simulator is at.
+//
+// NOTE: An instance of Simulation provides no multithreading consistency guarantees.
 func (s *Simulation) CurrentTick() Tick {
 	return s.tick
 }
