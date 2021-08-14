@@ -1,4 +1,4 @@
-package telepathy
+package srv
 
 import (
 	"context"
@@ -100,7 +100,7 @@ func RunControllerService(builder simulator.ControllerFunc)  {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	pb.RegisterControllerServiceServer(s,newRemoteController(builder))
+	pb.RegisterControllerServiceServer(s, newRemoteController(builder))
 	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
