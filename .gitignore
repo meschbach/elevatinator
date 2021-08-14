@@ -189,4 +189,3 @@ $RECYCLE.BIN/
 elevatinator
 bridge_player
 queue_grpc
-ipc/grpc/telepathy/pb/*.pb.go
