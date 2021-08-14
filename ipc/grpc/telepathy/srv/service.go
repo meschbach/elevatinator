@@ -41,19 +41,6 @@ func (t *remoteController) Spawn(ctx context.Context, opts *pb.SpawnOptions) (*p
 	return &pb.Controller{Id: 0}, nil
 }
 
-func doInit(t *remoteController, msg *pb.SimulationEvent_Init) error {
-	elevatorCount := msg.ElevatorCount
-	t.controller.maxElevators = elevatorCount
-	//fake elevator ids for now
-	elevatorIDs := make([]simulator.ElevatorID,elevatorCount)
-	for i, _ := range elevatorIDs {
-		elevatorIDs[i] = simulator.ElevatorID(i)
-	}
-	//dispatch to client
-	t.controller.controller.Init(elevatorIDs)
-	return nil
-}
-
 func (t *remoteController) Notice(ctx context.Context, notice *pb.SimulationNotice) (*pb.ControllerUpdates, error) {
 	id := notice.Target.Id
 	if id != 0 { return nil, errors.New("bad id") }
