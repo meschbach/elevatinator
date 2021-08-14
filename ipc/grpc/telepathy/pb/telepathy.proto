@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+option go_package = "grpc/telepathy/pb";
+
+service ControllerService {
+  rpc Spawn(SpawnOptions) returns (Controller) {}
+  rpc Notice( SimulationNotice) returns (ControllerUpdates) {}
+}
+
+message Controller {
+  uint32 id = 1;
+}
+
+message Tick {
+  uint64 v0 = 1;
+}
+
+message Elevator {
+  uint32 elevatorIndex = 1;
+}
+
+message Floor {
+  uint32 floorIndex = 1;
+}
+
+message SimulationNotice {
+  Controller target = 1;
+  repeated SimulationEvent event = 2;
+}
+
+message SimulationEvent {
+  Tick when = 1;
+
+  message ElevatorCalled {
+    Floor calledAt = 1;
+  }
+  ElevatorCalled called = 2;
+
+  message ElevatorArrived {
+    Elevator arriving = 1;
+    Floor atLocation = 2;
+  }
+  ElevatorArrived arriving = 3;
+
+  message FloorSelected {
+    Elevator inElevator = 1;
+    Floor selected = 2;
+  }
+  FloorSelected floorSelection = 4;
+
+  message Init {
+    uint32 ElevatorCount = 1;
+    uint32 FloorCount = 2;
+  }
+  Init initialize = 5;
+}
+
+message ControllerUpdates {
+  repeated ControllerDirective pending = 1;
+}
+
+message ControllerDirective {
+  Tick when = 1;
+
+  message MoveTo {
+    Elevator which = 1;
+    Floor target = 2;
+  }
+  MoveTo seekFloor = 2;
+}
+
+message SpawnOptions {
+}

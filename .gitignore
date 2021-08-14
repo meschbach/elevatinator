@@ -187,3 +187,6 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/osx,windows,intellij,go
 .idea/
 elevatinator
+bridge_player
+queue_grpc
+ipc/grpc/telepathy/pb/*.pb.go
