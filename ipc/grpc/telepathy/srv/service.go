@@ -6,9 +6,6 @@ import (
 	"fmt"
 	"github.com/meschbach/elevatinator/ipc/grpc/telepathy/pb"
 	"github.com/meschbach/elevatinator/simulator"
-	"google.golang.org/grpc"
-	"log"
-	"net"
 	"time"
 )
 
@@ -91,18 +88,4 @@ func (t *remoteController) Notice(ctx context.Context, notice *pb.SimulationNoti
 		}
 	}
 	return &pb.ControllerUpdates{Pending: out}, nil
-}
-
-func RunControllerService(builder simulator.ControllerFunc)  {
-	port := ":9998"
-	lis, err := net.Listen("tcp", port)
-	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
-	}
-	s := grpc.NewServer()
-	pb.RegisterControllerServiceServer(s, newRemoteController(builder))
-	log.Printf("server listening at %v", lis.Addr())
-	if err := s.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
-	}
 }
