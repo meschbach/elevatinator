@@ -49,7 +49,14 @@ func (t *remoteController) Notice(ctx context.Context, notice *pb.SimulationNoti
 	for _, e := range notice.Event {
 		fmt.Println("Event")
 		if e.Initialize != nil {
-			if err := doInit(t,e.Initialize); err != nil {
+			if err := doInit(t,e.Initialize); err != nil { return nil, err }
+		}
+
+		if e.Called != nil {
+			if err := doFloorCall(t,e.Called); err != nil { return nil, err }
+		}
+		if e.Arriving != nil {
+			if err := doElevatorArrived(t,e.Arriving); err != nil {
 				return nil, err
 			}
 		}
@@ -74,5 +81,6 @@ func (t *remoteController) Notice(ctx context.Context, notice *pb.SimulationNoti
 			},
 		}
 	}
+	t.controller.resetPending()
 	return &pb.ControllerUpdates{Pending: out}, nil
 }

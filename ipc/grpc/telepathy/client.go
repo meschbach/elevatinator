@@ -63,7 +63,9 @@ func (m *BridgedController) Init(elevators []simulator.ElevatorID) {
 }
 
 func (m *BridgedController) Called(floor simulator.FloorID) {
-
+	m.dispatch(&pb.SimulationEvent{
+		Called: &pb.SimulationEvent_ElevatorCalled{CalledAt: &pb.Floor{FloorIndex: uint32(floor)}},
+	})
 }
 
 func (m *BridgedController) FloorSelected(elevatorID simulator.ElevatorID, floor simulator.FloorID) {
@@ -77,7 +79,11 @@ func (m *BridgedController) FloorSelected(elevatorID simulator.ElevatorID, floor
 }
 
 func (m *BridgedController) CompletedMove(elevatorID simulator.ElevatorID) {
-
+	m.dispatch(&pb.SimulationEvent{
+		Arriving:       &pb.SimulationEvent_ElevatorArrived{
+			Arriving:   &pb.Elevator{ElevatorIndex: uint32(elevatorID)},
+		},
+	})
 }
 
 func (m *BridgedController) dispatch(e *pb.SimulationEvent) {

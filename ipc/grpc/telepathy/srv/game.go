@@ -27,3 +27,7 @@ func (c *controllerInstance) MoveTo(elevator simulator.ElevatorID, floor simulat
 		to:    floor,
 	})
 }
+
+func (c *controllerInstance) resetPending() {
+	c.pending = make([]*pendingMove, 0)
+}

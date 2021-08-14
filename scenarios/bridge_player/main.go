@@ -12,6 +12,6 @@ func main()  {
 	}
 
 	//scenarios := []scenarios.Scenario{scenarios.SinglePersonUp}
-	scenario := scenarios.SinglePersonUp
+	scenario := scenarios.SinglePersonDown
 	scenarios.RunScenario(bridge.ControllerAdapter(), scenario)
 }

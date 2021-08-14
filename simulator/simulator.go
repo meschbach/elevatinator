@@ -1,5 +1,7 @@
 package simulator
 
+import "fmt"
+
 type Tick int64
 
 // Simulation encapsulates game state over time.
@@ -81,6 +83,7 @@ func (s *Simulation) AttachControllerFunc(factory ControllerFunc) {
 }
 
 func (s *Simulation) MoveTo(elevatorID ElevatorID, floor FloorID) {
+	fmt.Printf("Simulation{tick: %d} -- Moving elevator %d to %d\n",s.tick, elevatorID,floor)
 	elevator := s.elevators[elevatorID]
 	elevator.moveTo(s, int(elevatorID), int(floor))
 }
@@ -166,9 +169,10 @@ func (s *Simulation) elevatorDoneMoving(elevatorID ElevatorID) {
 	for i, a := range s.enteredActors {
 		if a.placeType == PlaceElevator && a.placeIndex == int(elevatorID) {
 			s.actors[i].elevatorStopped(s, s.tick, s.elevators[elevatorID].currentFloor)
-			s.dispatchControllerEvent(OnElevatorArrived(s.tick,ElevatorID(elevatorID),FloorID(s.elevators[elevatorID].currentFloor)))
+			s.dispatchControllerEvent(OnElevatorArrived(s.tick,elevatorID,FloorID(s.elevators[elevatorID].currentFloor)))
 		}
 	}
+	fmt.Printf("Simulation{tick: %d} -- Elevator{id: %d} is at floor %d\n", s.tick, elevatorID, s.elevators[elevatorID].currentFloor)
 	s.controller.CompletedMove(elevatorID)
 }
 
