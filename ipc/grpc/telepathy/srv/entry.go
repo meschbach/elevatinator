@@ -15,7 +15,7 @@ type Network interface {
 
 // RunControllerService exports the given controller on port tcp/9998 over gRPC
 func RunControllerService(builder simulator.ControllerFunc) error {
-	l := &tcp{listenAt: ":9998"}
+	l := &tcp{listenAt: "localhost:9998"}
 	return RunControllerOn(builder, l)
 }
 

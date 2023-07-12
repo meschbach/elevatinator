@@ -9,6 +9,19 @@ import (
 	"time"
 )
 
+type ConnectionError struct {
+	Target     string
+	Underlying error
+}
+
+func (c *ConnectionError) Unwrap() error {
+	return c.Underlying
+}
+
+func (c *ConnectionError) Error() string {
+	return fmt.Sprintf("failed to connect to %q", c.Target)
+}
+
 type Landing struct {
 	connection *grpc.ClientConn
 	client     pb.ControllerServiceClient
@@ -19,7 +32,10 @@ func DialLanding(address string) (*Landing, error) {
 	fmt.Println("Attempting to connect")
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock(), grpc.WithTimeout(1*time.Second))
 	if err != nil {
-		return nil, err
+		return nil, &ConnectionError{
+			Target:     address,
+			Underlying: err,
+		}
 	}
 	return LandingWithConnection(conn), nil
 }
