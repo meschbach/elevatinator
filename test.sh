@@ -5,5 +5,5 @@ set -xe
 ./queue_grpc &
 # Give RPC time to bind
 sleep 1
-./bridge_player
+./cmd_scenarios --ai-address localhost:9998 single-up
 kill %1
