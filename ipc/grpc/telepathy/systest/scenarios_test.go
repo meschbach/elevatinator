@@ -47,6 +47,6 @@ type testNetwork struct {
 	transport *grpctest.BufferTransport
 }
 
-func (t *testNetwork) Listener() net.Listener {
-	return t.transport.Listener
+func (t *testNetwork) Listener() (net.Listener, error) {
+	return t.transport.Listener, nil
 }
