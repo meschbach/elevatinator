@@ -6,7 +6,7 @@ import (
 	"github.com/meschbach/elevatinator/ipc/grpc/telepathy"
 	"github.com/meschbach/elevatinator/ipc/grpc/telepathy/srv"
 	"github.com/meschbach/elevatinator/junk/grpctest"
-	"github.com/meschbach/elevatinator/scenarios"
+	"github.com/meschbach/elevatinator/pkg/scenarios"
 	"github.com/stretchr/testify/require"
 	"net"
 	"testing"

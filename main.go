@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/meschbach/elevatinator/scenarios"
+	"github.com/meschbach/elevatinator/pkg/scenarios"
 	"github.com/meschbach/elevatinator/simulator"
 )
 

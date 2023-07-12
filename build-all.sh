@@ -6,4 +6,4 @@ go test ./...
 
 go build .
 go build ./controllers/queue_grpc
-go build -o cmd_scenarios ./cmd/scenarios
+go build -o scenarios ./cmd/scenarios

@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/meschbach/elevatinator/ipc/grpc/telepathy"
-	"github.com/meschbach/elevatinator/scenarios"
+	"github.com/meschbach/elevatinator/pkg/scenarios"
 	"github.com/spf13/cobra"
 	"os"
 )
@@ -20,9 +20,8 @@ func main() {
 				return err
 			}
 
-			//scenarios := []scenarios.Scenario{scenarios.SinglePersonUp}
-			scenario := scenarios.SinglePersonDown
-			scenarios.RunScenario(bridge.ControllerAdapter(), scenario)
+			run := scenarios.SinglePersonDown
+			scenarios.RunScenario(bridge.ControllerAdapter(), run)
 			return nil
 		},
 	}
