@@ -1,5 +1,6 @@
 #!/bin/bash
 
+set -xe
 ./build-all.sh
 ./queue_grpc &
 # Give RPC time to bind
