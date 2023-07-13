@@ -36,9 +36,32 @@ func main() {
 	rootCmd.AddCommand(runScenario("single-up", "Runs a scenario for a single person to go up", scenarios.SinglePersonUp))
 	rootCmd.AddCommand(runScenario("single-down", "Runs a scenario for a single person to go down", scenarios.SinglePersonDown))
 	rootCmd.AddCommand(runScenario("multiple-up-and-back", "Runs a scenario with various persons going up and back", scenarios.MultipleUpAndBack))
+	rootCmd.AddCommand(healthProbeCommand(&serviceAddress))
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
+	}
+}
+
+func healthProbeCommand(serviceAddress *string) *cobra.Command {
+	return &cobra.Command{
+		Use:   "health-probe",
+		Short: "Uses standard gRPC health check to ensure a service is healthy",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			address := *serviceAddress
+			//todo: add implicit retry
+			if healthy, err := telepathy.CheckHealth(cmd.Context(), address); err == nil {
+				if healthy {
+					fmt.Printf("%q is healthy\n", address)
+				} else {
+					fmt.Printf("UNHEALTHY:\t\t%q\n", address)
+				}
+				return nil
+			} else {
+				fmt.Printf("Unable to check health:\t\t%q\t%e\n", address, err)
+				return err
+			}
+		},
 	}
 }

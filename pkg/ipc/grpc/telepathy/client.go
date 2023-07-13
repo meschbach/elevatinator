@@ -29,7 +29,7 @@ type Landing struct {
 
 func DialLanding(address string) (*Landing, error) {
 	// Set up a connection to the server.
-	fmt.Println("Attempting to connect")
+	fmt.Printf("Attempting to connect to %q\n", address)
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock(), grpc.WithTimeout(1*time.Second))
 	if err != nil {
 		return nil, &ConnectionError{
