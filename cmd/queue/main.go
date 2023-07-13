@@ -15,7 +15,7 @@ func main() {
 		Use:   "run",
 		Short: "launches the serivce",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return srv.RunControllerService(queue.NewController)
+			return srv.RunControllerService(queue.NewController, srv.ListenAt(serviceAddress))
 		},
 	}
 

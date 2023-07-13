@@ -7,6 +7,18 @@ import (
 	"net"
 )
 
+type config struct {
+	listenAt string
+}
+
+type Option func(c *config)
+
+func ListenAt(address string) Option {
+	return func(c *config) {
+		c.listenAt = address
+	}
+}
+
 // Network is an abstraction for binding to a listener.  Closes the gap between real world usage of the code and testing
 // paths.
 type Network interface {
@@ -14,8 +26,13 @@ type Network interface {
 }
 
 // RunControllerService exports the given controller on port tcp/9998 over gRPC
-func RunControllerService(builder simulator.ControllerFunc) error {
-	l := &tcp{listenAt: "localhost:9998"}
+func RunControllerService(builder simulator.ControllerFunc, withOptions ...Option) error {
+	c := &config{listenAt: "localhost:9998"}
+	for _, o := range withOptions {
+		o(c)
+	}
+
+	l := &tcp{listenAt: c.listenAt}
 	return RunControllerOn(builder, l)
 }
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-service_address="localhost:9998"
+service_address="localhost:8999"
 
 set -xe
 ./build-all.sh
