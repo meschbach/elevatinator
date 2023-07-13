@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/meschbach/elevatinator/ipc/grpc/telepathy"
 	"github.com/meschbach/elevatinator/pkg/scenarios"
+	"github.com/meschbach/elevatinator/simulator"
 	"github.com/spf13/cobra"
 	"os"
 )
@@ -11,19 +12,20 @@ import (
 func main() {
 	serviceAddress := "localhost:9998"
 
-	singleUp := &cobra.Command{
-		Use:   "single-up",
-		Short: "Runs single person up scenario",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			bridge, err := telepathy.DialLanding("localhost:9998")
-			if err != nil {
-				return err
-			}
+	runScenario := func(use string, short string, setup func(simulation *simulator.Simulation) simulator.Tick) *cobra.Command {
+		return &cobra.Command{
+			Use:   use,
+			Short: short,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				bridge, err := telepathy.DialLanding(serviceAddress)
+				if err != nil {
+					return err
+				}
 
-			run := scenarios.SinglePersonDown
-			scenarios.RunScenario(bridge.ControllerAdapter(), run)
-			return nil
-		},
+				scenarios.RunScenario(bridge.ControllerAdapter(), setup)
+				return nil
+			},
+		}
 	}
 
 	rootCmd := &cobra.Command{
@@ -31,7 +33,8 @@ func main() {
 		Short: "Run scenarios against an AI gRPC service",
 	}
 	rootCmd.PersistentFlags().StringVarP(&serviceAddress, "ai-address", "a", serviceAddress, "AI unit address to connect to")
-	rootCmd.AddCommand(singleUp)
+	rootCmd.AddCommand(runScenario("single-up", "Runs a scenario for a single person to go up", scenarios.SinglePersonUp))
+	rootCmd.AddCommand(runScenario("single-down", "Runs a scenario for a single person to go down", scenarios.SinglePersonDown))
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
