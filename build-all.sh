@@ -5,5 +5,5 @@ set -xe
 go test ./...
 
 go build .
-go build ./controllers/queue_grpc
+go build -o queue ./cmd/queue
 go build -o scenarios ./cmd/scenarios
