@@ -1,5 +1,7 @@
 package simulator
 
+import "fmt"
+
 const (
 	Idle = iota
 	MovingUp
@@ -38,6 +40,7 @@ func (e *Elevator) Tick(s *Simulation, id int, tick Tick) {
 
 func (e *Elevator) maybeDoneMoving(s *Simulation, id int) {
 	if e.currentFloor == e.moveToFloor {
+		fmt.Printf("Elevator{id: %d} -- Finished moving to floor %d\n", id, e.currentFloor)
 		e.state = Idle
 		s.elevatorDoneMoving(ElevatorID(id))
 	}
