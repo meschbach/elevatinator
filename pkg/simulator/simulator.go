@@ -18,8 +18,8 @@ type Simulation struct {
 }
 
 // Tick advances the simulation by a single tick.  For each tick the following occurs:
-//  * elevators are notified
-//  * actors are notified
+//   - elevators are notified
+//   - actors are notified
 //
 // True is returned if all existing actors have completed their objectives
 func (s *Simulation) Tick() bool {
@@ -83,7 +83,7 @@ func (s *Simulation) AttachControllerFunc(factory ControllerFunc) {
 }
 
 func (s *Simulation) MoveTo(elevatorID ElevatorID, floor FloorID) {
-	fmt.Printf("Simulation{tick: %d} -- Moving elevator %d to %d\n",s.tick, elevatorID,floor)
+	fmt.Printf("Simulation{tick: %d} -- Moving elevator %d to %d\n", s.tick, elevatorID, floor)
 	elevator := s.elevators[elevatorID]
 	elevator.moveTo(s, int(elevatorID), int(floor))
 }
@@ -161,7 +161,7 @@ func (s *Simulation) PressButton(actorID int, floor int) {
 		elevator := s.elevators[state.placeIndex]
 		s.controller.FloorSelected(ElevatorID(state.placeIndex), FloorID(floor))
 		elevator.desiredFloors = append(elevator.desiredFloors, floor)
-		s.dispatchControllerEvent(OnElevatorFloorRequest(s.tick,ElevatorID(state.placeIndex),FloorID(floor)))
+		s.dispatchControllerEvent(OnElevatorFloorRequest(s.tick, ElevatorID(state.placeIndex), FloorID(floor)))
 	}
 }
 
@@ -169,7 +169,7 @@ func (s *Simulation) elevatorDoneMoving(elevatorID ElevatorID) {
 	for i, a := range s.enteredActors {
 		if a.placeType == PlaceElevator && a.placeIndex == int(elevatorID) {
 			s.actors[i].elevatorStopped(s, s.tick, s.elevators[elevatorID].currentFloor)
-			s.dispatchControllerEvent(OnElevatorArrived(s.tick,elevatorID,FloorID(s.elevators[elevatorID].currentFloor)))
+			s.dispatchControllerEvent(OnElevatorArrived(s.tick, elevatorID, FloorID(s.elevators[elevatorID].currentFloor)))
 		}
 	}
 	fmt.Printf("Simulation{tick: %d} -- Elevator{id: %d} is at floor %d\n", s.tick, elevatorID, s.elevators[elevatorID].currentFloor)
@@ -196,14 +196,14 @@ func (s *Simulation) Initialize(elevators int, floors int) {
 	s.dispatchControllerEvent(OnInitDone())
 }
 
-//TODO: Multithreading
+// TODO: Multithreading
 func (s *Simulation) dispatchControllerEvent(event Event) {
 	for _, l := range s.controllerListeners {
 		l.OnControllerEvent(event)
 	}
 }
 
-//TODO: Multithreading
+// TODO: Multithreading
 func (s *Simulation) AttachControllerListener(listener ControllerListener) {
 	s.controllerListeners = append(s.controllerListeners, listener)
 }

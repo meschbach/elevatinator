@@ -138,6 +138,6 @@ func OnActorFinished(tick Tick, points int) Event {
 	return Event{
 		EventType: ActorFinished,
 		Timestamp: tick,
-		Points: points,
+		Points:    points,
 	}
 }

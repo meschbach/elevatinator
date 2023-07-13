@@ -133,5 +133,5 @@ var ControllerService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "ipc/grpc/telepathy/pb/telepathy.proto",
+	Metadata: "pkg/ipc/grpc/telepathy/pb/telepathy.proto",
 }

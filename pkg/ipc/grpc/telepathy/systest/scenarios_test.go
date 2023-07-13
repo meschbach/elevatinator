@@ -2,10 +2,10 @@ package systest
 
 import (
 	"context"
-	"github.com/meschbach/elevatinator/ipc/grpc/telepathy"
-	"github.com/meschbach/elevatinator/ipc/grpc/telepathy/srv"
-	"github.com/meschbach/elevatinator/junk/grpctest"
 	"github.com/meschbach/elevatinator/pkg/controllers/queue"
+	"github.com/meschbach/elevatinator/pkg/ipc/grpc/telepathy"
+	"github.com/meschbach/elevatinator/pkg/ipc/grpc/telepathy/srv"
+	"github.com/meschbach/elevatinator/pkg/junk/grpctest"
 	"github.com/meschbach/elevatinator/pkg/scenarios"
 	"github.com/stretchr/testify/require"
 	"net"

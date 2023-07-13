@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/meschbach/elevatinator/ipc/grpc/telepathy"
+	"github.com/meschbach/elevatinator/pkg/ipc/grpc/telepathy"
 	"github.com/meschbach/elevatinator/pkg/scenarios"
-	"github.com/meschbach/elevatinator/simulator"
+	"github.com/meschbach/elevatinator/pkg/simulator"
 	"github.com/spf13/cobra"
 	"os"
 )

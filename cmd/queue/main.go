@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/meschbach/elevatinator/ipc/grpc/telepathy/srv"
 	"github.com/meschbach/elevatinator/pkg/controllers/queue"
+	"github.com/meschbach/elevatinator/pkg/ipc/grpc/telepathy/srv"
 	"github.com/spf13/cobra"
 	"os"
 )

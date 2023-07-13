@@ -2,7 +2,7 @@ package queue
 
 import (
 	"fmt"
-	"github.com/meschbach/elevatinator/simulator"
+	simulator2 "github.com/meschbach/elevatinator/pkg/simulator"
 )
 
 const (
@@ -13,17 +13,17 @@ const (
 
 type request struct {
 	requestType int
-	floor       simulator.FloorID
+	floor       simulator2.FloorID
 }
 
 type Controller struct {
 	state    int
-	id       simulator.ElevatorID
-	elevator simulator.ControlledElevators
+	id       simulator2.ElevatorID
+	elevator simulator2.ControlledElevators
 	pending  []request
 }
 
-func NewController(elevators simulator.ControlledElevators) simulator.Controller {
+func NewController(elevators simulator2.ControlledElevators) simulator2.Controller {
 	return &Controller{
 		state:    ControllerIdle,
 		id:       -1,
@@ -32,11 +32,11 @@ func NewController(elevators simulator.ControlledElevators) simulator.Controller
 	}
 }
 
-func (m *Controller) Init(elevators []simulator.ElevatorID) {
+func (m *Controller) Init(elevators []simulator2.ElevatorID) {
 	m.id = elevators[0]
 }
 
-func (m *Controller) Called(floor simulator.FloorID) {
+func (m *Controller) Called(floor simulator2.FloorID) {
 	fmt.Printf("Call at %d\n", floor)
 	m.enqueueOrPerform(request{
 		requestType: ControllerPickingUpCall,
@@ -44,7 +44,7 @@ func (m *Controller) Called(floor simulator.FloorID) {
 	})
 }
 
-func (m *Controller) FloorSelected(elevatorID simulator.ElevatorID, floor simulator.FloorID) {
+func (m *Controller) FloorSelected(elevatorID simulator2.ElevatorID, floor simulator2.FloorID) {
 	fmt.Printf("Elevator call...state: %d\n", m.state)
 	m.enqueueOrPerform(request{
 		requestType: ControllerDroppingOff,
@@ -52,7 +52,7 @@ func (m *Controller) FloorSelected(elevatorID simulator.ElevatorID, floor simula
 	})
 }
 
-func (m *Controller) CompletedMove(elevatorID simulator.ElevatorID) {
+func (m *Controller) CompletedMove(elevatorID simulator2.ElevatorID) {
 	fmt.Printf("Completed move to %d with %d pending\n", m.state, m.pending)
 	m.dequeueOrIdle()
 }

@@ -3,8 +3,8 @@ package telepathy
 import (
 	"context"
 	"fmt"
-	"github.com/meschbach/elevatinator/ipc/grpc/telepathy/pb"
-	"github.com/meschbach/elevatinator/simulator"
+	pb2 "github.com/meschbach/elevatinator/pkg/ipc/grpc/telepathy/pb"
+	simulator2 "github.com/meschbach/elevatinator/pkg/simulator"
 	"google.golang.org/grpc"
 	"time"
 )
@@ -24,7 +24,7 @@ func (c *ConnectionError) Error() string {
 
 type Landing struct {
 	connection *grpc.ClientConn
-	client     pb.ControllerServiceClient
+	client     pb2.ControllerServiceClient
 }
 
 func DialLanding(address string) (*Landing, error) {
@@ -41,7 +41,7 @@ func DialLanding(address string) (*Landing, error) {
 }
 
 func LandingWithConnection(conn *grpc.ClientConn) *Landing {
-	c := pb.NewControllerServiceClient(conn)
+	c := pb2.NewControllerServiceClient(conn)
 
 	return &Landing{
 		connection: conn,
@@ -49,12 +49,12 @@ func LandingWithConnection(conn *grpc.ClientConn) *Landing {
 	}
 }
 
-func (l *Landing) ControllerAdapter() simulator.ControllerFunc {
-	return func(elevators simulator.ControlledElevators) simulator.Controller {
+func (l *Landing) ControllerAdapter() simulator2.ControllerFunc {
+	return func(elevators simulator2.ControlledElevators) simulator2.Controller {
 		ctx, done := context.WithTimeout(context.Background(), time.Second*1)
 		defer done()
 
-		result, err := l.client.Spawn(ctx, &pb.SpawnOptions{})
+		result, err := l.client.Spawn(ctx, &pb2.SpawnOptions{})
 		if err != nil {
 			panic(err)
 		}
@@ -69,52 +69,52 @@ func (l *Landing) ControllerAdapter() simulator.ControllerFunc {
 type BridgedController struct {
 	landing      *Landing
 	controllerID uint32
-	controls     simulator.ControlledElevators
-	elevators    []simulator.ElevatorID
+	controls     simulator2.ControlledElevators
+	elevators    []simulator2.ElevatorID
 }
 
-func (m *BridgedController) Init(elevators []simulator.ElevatorID) {
+func (m *BridgedController) Init(elevators []simulator2.ElevatorID) {
 	m.elevators = elevators
-	m.dispatch(&pb.SimulationEvent{
+	m.dispatch(&pb2.SimulationEvent{
 		When: nil,
-		Initialize: &pb.SimulationEvent_Init{
+		Initialize: &pb2.SimulationEvent_Init{
 			ElevatorCount: uint32(len(elevators)),
 			FloorCount:    5,
 		},
 	})
 }
 
-func (m *BridgedController) Called(floor simulator.FloorID) {
-	m.dispatch(&pb.SimulationEvent{
-		Called: &pb.SimulationEvent_ElevatorCalled{CalledAt: &pb.Floor{FloorIndex: uint32(floor)}},
+func (m *BridgedController) Called(floor simulator2.FloorID) {
+	m.dispatch(&pb2.SimulationEvent{
+		Called: &pb2.SimulationEvent_ElevatorCalled{CalledAt: &pb2.Floor{FloorIndex: uint32(floor)}},
 	})
 }
 
-func (m *BridgedController) FloorSelected(elevatorID simulator.ElevatorID, floor simulator.FloorID) {
-	m.dispatch(&pb.SimulationEvent{
-		When: &pb.Tick{V0: 0},
-		FloorSelection: &pb.SimulationEvent_FloorSelected{
-			InElevator: &pb.Elevator{ElevatorIndex: uint32(elevatorID)},
-			Selected:   &pb.Floor{FloorIndex: uint32(floor)},
+func (m *BridgedController) FloorSelected(elevatorID simulator2.ElevatorID, floor simulator2.FloorID) {
+	m.dispatch(&pb2.SimulationEvent{
+		When: &pb2.Tick{V0: 0},
+		FloorSelection: &pb2.SimulationEvent_FloorSelected{
+			InElevator: &pb2.Elevator{ElevatorIndex: uint32(elevatorID)},
+			Selected:   &pb2.Floor{FloorIndex: uint32(floor)},
 		},
 	})
 }
 
-func (m *BridgedController) CompletedMove(elevatorID simulator.ElevatorID) {
-	m.dispatch(&pb.SimulationEvent{
-		Arriving: &pb.SimulationEvent_ElevatorArrived{
-			Arriving: &pb.Elevator{ElevatorIndex: uint32(elevatorID)},
+func (m *BridgedController) CompletedMove(elevatorID simulator2.ElevatorID) {
+	m.dispatch(&pb2.SimulationEvent{
+		Arriving: &pb2.SimulationEvent_ElevatorArrived{
+			Arriving: &pb2.Elevator{ElevatorIndex: uint32(elevatorID)},
 		},
 	})
 }
 
-func (m *BridgedController) dispatch(e *pb.SimulationEvent) {
+func (m *BridgedController) dispatch(e *pb2.SimulationEvent) {
 	ctx, done := context.WithTimeout(context.Background(), time.Second*1)
 	defer done()
 
-	updates, err := m.landing.client.Notice(ctx, &pb.SimulationNotice{
-		Target: &pb.Controller{Id: m.controllerID},
-		Event:  []*pb.SimulationEvent{e},
+	updates, err := m.landing.client.Notice(ctx, &pb2.SimulationNotice{
+		Target: &pb2.Controller{Id: m.controllerID},
+		Event:  []*pb2.SimulationEvent{e},
 	})
 	if err != nil {
 		panic(err)
@@ -135,13 +135,13 @@ func (m *BridgedController) dispatch(e *pb.SimulationEvent) {
 	}
 }
 
-func convertFloorFromWire(input *pb.Floor) simulator.FloorID {
+func convertFloorFromWire(input *pb2.Floor) simulator2.FloorID {
 	index := input.FloorIndex
 	fmt.Printf("Floor %d\n", index)
-	return simulator.FloorID(index)
+	return simulator2.FloorID(index)
 }
 
-func (m *BridgedController) convertElevatorFromWire(input *pb.Elevator) (simulator.ElevatorID, error) {
+func (m *BridgedController) convertElevatorFromWire(input *pb2.Elevator) (simulator2.ElevatorID, error) {
 	index := input.ElevatorIndex
 	if len(m.elevators) < int(index) {
 		return -1, fmt.Errorf("got elevator index %d, max %d", index, len(m.elevators))

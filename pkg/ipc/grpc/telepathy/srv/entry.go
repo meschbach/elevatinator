@@ -1,8 +1,8 @@
 package srv
 
 import (
-	"github.com/meschbach/elevatinator/ipc/grpc/telepathy/pb"
-	"github.com/meschbach/elevatinator/simulator"
+	"github.com/meschbach/elevatinator/pkg/ipc/grpc/telepathy/pb"
+	"github.com/meschbach/elevatinator/pkg/simulator"
 	"google.golang.org/grpc"
 	"net"
 )

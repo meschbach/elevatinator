@@ -20,7 +20,7 @@ directory as `main.go`, called `controller.go`.  Use the following template to g
 ```go
 package main
 
-import "github.com/meschbach/elevatinator/simulator"
+import "github.com/meschbach/elevatinator/pkg/simulator"
 
 type MyStrategy struct {
 	// any data or state should go here
@@ -30,16 +30,16 @@ func NewStrategy(elevators simulator.ControlledElevators) simulator.Controller {
 	return &MyStrategy{}
 }
 
-func (m *MyStrategy) Init(elevators []simulator.ElevatorID) {}
-func (m *MyStrategy) Called(floor simulator.FloorID) {}
-func (m *MyStrategy) FloorSelected(elevatorID simulator.ElevatorID, floor simulator.FloorID) { }
-func (m *MyStrategy) CompletedMove(elevatorID simulator.ElevatorID) {}
+func (m *MyStrategy) Init(elevators []simulator.ElevatorID)                                  {}
+func (m *MyStrategy) Called(floor simulator.FloorID)                                         {}
+func (m *MyStrategy) FloorSelected(elevatorID simulator.ElevatorID, floor simulator.FloorID) {}
+func (m *MyStrategy) CompletedMove(elevatorID simulator.ElevatorID)                          {}
 ```
 
 This allows you to plugin to the simulation.  Additionally, you'll need to modify `main.go` from
 `scenarios.RunScenario(simulator.NewMoveController, scenarios.MultipleUpAndBack)` *to* `scenarios.RunScenario(NewStrategy, scenarios.MultipleUpAndBack)`
 
-Check out [simulator/movecontroller.go](simulator/movecontroller.go) for  examples on how to move elevators!
+Check out [simulator/movecontroller.go](pkg/simulator/movecontroller.go) for  examples on how to move elevators!
 
 #### Building & Running
 

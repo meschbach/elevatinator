@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/meschbach/elevatinator/pkg/scenarios"
-	"github.com/meschbach/elevatinator/simulator"
+	"github.com/meschbach/elevatinator/pkg/simulator"
 )
 
 func main() {

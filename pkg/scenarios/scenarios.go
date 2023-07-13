@@ -2,21 +2,21 @@ package scenarios
 
 import (
 	"fmt"
-	"github.com/meschbach/elevatinator/simulator"
+	simulator2 "github.com/meschbach/elevatinator/pkg/simulator"
 	"testing"
 )
 
 // Scenario configures a simulation for a specific puzzle.  A Scenario provides the maximum number of possible ticks to
 // allow a controller to run for all simulation.Actors to win.
-type Scenario func(simulation *simulator.Simulation)simulator.Tick
+type Scenario func(simulation *simulator2.Simulation) simulator2.Tick
 
 // RunScenario runs the given scenario against the controller produced via the factory.  If the controller completes the
 // scenario in less than the maximum allowed ticks then the count is produced.  Otherwise the event log from the run is
 // written out.
-func RunScenario(factory simulator.ControllerFunc, scenario Scenario)  {
-	stream := simulator.NewEventLog()
+func RunScenario(factory simulator2.ControllerFunc, scenario Scenario) {
+	stream := simulator2.NewEventLog()
 
-	simulation := simulator.NewSimulation()
+	simulation := simulator2.NewSimulation()
 	simulation.AttachControllerListener(stream)
 	maxTicks := scenario(simulation)
 	simulation.AttachControllerFunc(factory)
@@ -35,10 +35,10 @@ func RunScenario(factory simulator.ControllerFunc, scenario Scenario)  {
 
 // TestScenario integrates with Go's built-in testing framework to assert a given controller is able to complete the
 // given scenario.  This is useful for functional level integration testing with Controllers.
-func TestScenario(t *testing.T, factory simulator.ControllerFunc, scenario Scenario)  {
-	stream := simulator.NewEventLog()
+func TestScenario(t *testing.T, factory simulator2.ControllerFunc, scenario Scenario) {
+	stream := simulator2.NewEventLog()
 
-	simulation := simulator.NewSimulation()
+	simulation := simulator2.NewSimulation()
 	simulation.AttachControllerListener(stream)
 	maxTicks := scenario(simulation)
 	simulation.AttachControllerFunc(factory)
@@ -51,12 +51,12 @@ func TestScenario(t *testing.T, factory simulator.ControllerFunc, scenario Scena
 		t.Logf("Event stream:")
 		for _, e := range stream.Events {
 			switch e.EventType {
-			case simulator.TickStart:
+			case simulator2.TickStart:
 				//do nothing
-			case simulator.TickDone:
+			case simulator2.TickDone:
 				t.Logf("-- Tick %d --", e.Timestamp)
 			default:
-				t.Logf("\t- %s\n",e.ToString())
+				t.Logf("\t- %s\n", e.ToString())
 			}
 		}
 	}
