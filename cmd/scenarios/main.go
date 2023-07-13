@@ -35,6 +35,7 @@ func main() {
 	rootCmd.PersistentFlags().StringVarP(&serviceAddress, "ai-address", "a", serviceAddress, "AI unit address to connect to")
 	rootCmd.AddCommand(runScenario("single-up", "Runs a scenario for a single person to go up", scenarios.SinglePersonUp))
 	rootCmd.AddCommand(runScenario("single-down", "Runs a scenario for a single person to go down", scenarios.SinglePersonDown))
+	rootCmd.AddCommand(runScenario("multiple-up-and-back", "Runs a scenario with various persons going up and back", scenarios.MultipleUpAndBack))
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
