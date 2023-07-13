@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/meschbach/elevatinator/controllers"
 	"github.com/meschbach/elevatinator/ipc/grpc/telepathy/srv"
+	"github.com/meschbach/elevatinator/pkg/controllers/queue"
 	"github.com/spf13/cobra"
 	"os"
 )
@@ -15,7 +15,7 @@ func main() {
 		Use:   "run",
 		Short: "launches the serivce",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return srv.RunControllerService(controllers.NewQueueController)
+			return srv.RunControllerService(queue.NewController)
 		},
 	}
 

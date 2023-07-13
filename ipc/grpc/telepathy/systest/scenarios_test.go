@@ -2,10 +2,10 @@ package systest
 
 import (
 	"context"
-	"github.com/meschbach/elevatinator/controllers"
 	"github.com/meschbach/elevatinator/ipc/grpc/telepathy"
 	"github.com/meschbach/elevatinator/ipc/grpc/telepathy/srv"
 	"github.com/meschbach/elevatinator/junk/grpctest"
+	"github.com/meschbach/elevatinator/pkg/controllers/queue"
 	"github.com/meschbach/elevatinator/pkg/scenarios"
 	"github.com/stretchr/testify/require"
 	"net"
@@ -19,7 +19,7 @@ func TestSystem(t *testing.T) {
 
 	virtualNetwork := &testNetwork{transport: grpctest.NewBufferTransport()}
 	go func() {
-		if err := srv.RunControllerOn(controllers.NewQueueController, virtualNetwork); err != nil {
+		if err := srv.RunControllerOn(queue.NewController, virtualNetwork); err != nil {
 			require.NoError(t, err)
 		}
 	}()
