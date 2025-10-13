@@ -4,9 +4,9 @@ import (
 	simulator2 "github.com/meschbach/elevatinator/pkg/simulator"
 )
 
-// SinglePersonUp is a scenario where an actor starts on a lower floor and moves up to a higher floor.  Despite the
-// simplicity this is an isolated test case to ensure a controller properly moves a single occupant in the intended
-// direction.
+// SinglePersonUp is a scenario where an actor starts on a lower floor and moves up to a higher floor.
+// Despite the simplicity, this is an isolated test case to ensure a controller properly moves a single occupant in the
+// intended direction.
 func SinglePersonUp(simulation *simulator2.Simulation) simulator2.Tick {
 	simulation.AttachActor(simulator2.NewActor(4, 0, 0))
 	simulation.Initialize(1, 5)

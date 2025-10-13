@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/meschbach/elevatinator/pkg/ipc/grpc/telepathy"
 	"github.com/meschbach/elevatinator/pkg/scenarios"
 	"github.com/meschbach/elevatinator/pkg/simulator"
 	"github.com/spf13/cobra"
-	"os"
 )
 
 func main() {
