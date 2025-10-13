@@ -7,7 +7,7 @@ import (
 
 func TestSimulatorRunsForTicks(t *testing.T) {
 	s := NewSimulation()
-	s.Initialize(1,2)
+	s.Initialize(1, 2)
 	for i := 0; i < 10; i++ {
 		s.Tick()
 	}
@@ -20,7 +20,7 @@ func TestActorAchievesGoal(t *testing.T) {
 	targetFloor := 1
 	maxTicks := Tick(10)
 	s := NewSimulation()
-	s.Initialize(1,2)
+	s.Initialize(1, 2)
 	s.AttachActor(NewActor(targetFloor, 0, 0))
 	s.AttachControllerFunc(NewMoveController)
 	for i := Tick(0); i < maxTicks; i++ {
@@ -41,7 +41,7 @@ func TestEventFeed(t *testing.T) {
 	s.AttachControllerListener(capture)
 
 	t.Logf("initializing")
-	s.Initialize(1,2)
+	s.Initialize(1, 2)
 	s.AttachControllerFunc(NewMoveController)
 	for i := Tick(0); i < maxTicks; i++ {
 		s.Tick()
@@ -61,7 +61,7 @@ func TestGameCompletion(t *testing.T) {
 	s.AttachControllerListener(capture)
 
 	t.Logf("initializing")
-	s.Initialize(1,2)
+	s.Initialize(1, 2)
 	s.AttachControllerFunc(NewMoveController)
 	endTick := s.TickUpTo(maxTicks)
 
@@ -85,7 +85,7 @@ func TestElevatorsMoveDown(t *testing.T) {
 	s := NewSimulation()
 	s.AttachActor(NewActor(0, 1, 0))
 
-	s.Initialize(1,2)
+	s.Initialize(1, 2)
 	s.AttachControllerFunc(NewMoveController)
 	endTick := s.TickUpTo(maxTicks)
 
