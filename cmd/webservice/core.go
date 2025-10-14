@@ -24,8 +24,9 @@ type aiUnits struct {
 }
 
 type service struct {
-	availableScenarios []scenario
-	aiUnits            []aiUnits
+	builtinScenarios []scenario
+	aiUnits          []aiUnits
+	dynamicScenarios map[string]*DynamicScenarioWire
 
 	state        *sync.RWMutex
 	gameSessions map[string]*gameSession
@@ -42,7 +43,14 @@ type GetScenariosReply struct {
 
 func (s *service) getScenariosRoute(ctx context.Context, r *http.Request) (httpReply, error) {
 	output := GetScenariosReply{}
-	for _, s := range s.availableScenarios {
+	for _, s := range s.builtinScenarios {
+		output.Available = append(output.Available, GetScenariosDescription{
+			Name:        s.Name,
+			Description: s.Description,
+		})
+	}
+
+	for _, s := range s.dynamicScenarios {
 		output.Available = append(output.Available, GetScenariosDescription{
 			Name:        s.Name,
 			Description: s.Description,

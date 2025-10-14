@@ -16,10 +16,13 @@ type gameSession struct {
 }
 
 func (s *service) newGameSession(scenarioName string, aiName string) (*gameSession, error) {
+	s.state.RLock()
+	defer s.state.RUnlock()
+
 	matchedAIUnits := fx.Filter(s.aiUnits, func(aiUnits aiUnits) bool {
 		return aiUnits.Name == aiName
 	})
-	matchedScenario := fx.Filter(s.availableScenarios, func(scenario scenario) bool {
+	matchedScenario := fx.Filter(s.builtinScenarios, func(scenario scenario) bool {
 		return scenario.Name == scenarioName
 	})
 	if len(matchedAIUnits) != 1 {

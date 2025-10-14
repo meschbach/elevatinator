@@ -18,7 +18,7 @@ import (
 
 func runService(processContext context.Context) {
 	core := &service{
-		availableScenarios: []scenario{
+		builtinScenarios: []scenario{
 			{Name: "single-up", Description: "a single person to go up", setup: scenarios.SinglePersonUp},
 			{Name: "single-down", Description: "a single person to go down", setup: scenarios.SinglePersonDown},
 			{Name: "multiple-up-and-back", Description: "various persons going up and back", setup: scenarios.MultipleUpAndBack},
@@ -36,8 +36,11 @@ func runService(processContext context.Context) {
 		_, _ = w.Write([]byte("ok"))
 	}).Methods(http.MethodGet)
 
-	scenariosRoute := router.Path("/scenarios")
-	scenariosRoute.Methods(http.MethodGet).HandlerFunc(smartRoute(core.getScenariosRoute))
+	router.Path("/scenarios").Methods(http.MethodGet).HandlerFunc(smartRoute(core.getScenariosRoute))
+	router.Path("/scenario").Methods(http.MethodGet).HandlerFunc(smartRoute(core.getScenarioRoute))
+	router.Path("/scenario").Methods(http.MethodPost).HandlerFunc(smartRoute(core.postScenarioRoute))
+	router.Path("/scenario/{id}").Methods(http.MethodPut).HandlerFunc(smartRoute(core.putScenarioRoute))
+	router.Path("/scenario/{id}").Methods(http.MethodDelete).HandlerFunc(smartRoute(core.deleteScenarioRoute))
 
 	router.Path("/controllers").Methods(http.MethodGet).HandlerFunc(smartRoute(core.getControllersRoute))
 
