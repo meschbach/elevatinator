@@ -176,6 +176,15 @@ func (s *Simulation) elevatorDoneMoving(elevatorID ElevatorID) {
 	s.controller.CompletedMove(elevatorID)
 }
 
+func (s *Simulation) elevatorOnFloor(elevatorID ElevatorID, floor FloorID) {
+	fmt.Printf("Simulation{tick: %d} -- Elevator{id: %d} arrived at floor %d\n", s.tick, elevatorID, floor)
+	s.dispatchControllerEvent(Event{
+		EventType: ElevatorAtFloor,
+		Elevator:  elevatorID,
+		Floor:     floor,
+	})
+}
+
 func (s *Simulation) callElevator(floor int) {
 	s.dispatchControllerEvent(OnElevatorCalled(s.tick, FloorID(floor)))
 	s.controller.Called(FloorID(floor))

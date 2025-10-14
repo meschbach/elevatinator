@@ -21,6 +21,8 @@ const (
 	ElevatorFloorRequest
 
 	ActorFinished
+
+	ElevatorAtFloor
 )
 
 type Event struct {
@@ -59,6 +61,8 @@ func (e Event) ToString() string {
 		return fmt.Sprintf("Event{ElevatorFloorRequest, %d @ %d}", e.Elevator, e.Floor)
 	case ActorFinished:
 		return fmt.Sprintf("Event{ActorFinished, point: %d}", e.Points)
+	case ElevatorAtFloor:
+		return fmt.Sprintf("Event{ElevatorAtFloor, elevator %d @ floor %d}", e.Elevator, e.Floor)
 	default:
 		return fmt.Sprintf("Unkonwn event type %d: %#v", e.EventType, e)
 	}

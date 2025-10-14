@@ -222,6 +222,10 @@ func (s *service) getSessionEvents(ctx context.Context, r *http.Request) (httpRe
 		case simulator.ActorFinished:
 			translated[index].EventType = "ActorFinished"
 			translated[index].Points = &event.Points
+		case simulator.ElevatorAtFloor:
+			translated[index].EventType = "ElevatorAtFloor"
+			translated[index].Floor = &event.Floor
+			translated[index].Elevator = &event.Elevator
 		default:
 			translated[index].EventType = fmt.Sprintf("%s", event.ToString())
 		}

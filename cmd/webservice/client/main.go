@@ -90,6 +90,8 @@ func safeSession(ctx context.Context, log io.Writer) error {
 			fmt.Printf("\t\tActor finshed.  Earned %d point(s).\n", *e.Points)
 		case "ElevatorArrived":
 			fmt.Printf("\t\tElevator %d arrived at floor %d\n", *e.Elevator, *e.Floor)
+		case "ElevatorAtFloor":
+			fmt.Printf("\t\tElevator %d is at floor %d\n", *e.Elevator, *e.Floor)
 		default:
 			fmt.Printf("\t\tUnhandled event: %+v\n", e)
 		}

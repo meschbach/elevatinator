@@ -31,9 +31,11 @@ func (e *Elevator) Tick(s *Simulation, id int, tick Tick) {
 	switch e.state {
 	case MovingUp:
 		e.currentFloor++
+		s.elevatorOnFloor(ElevatorID(id), FloorID(e.currentFloor))
 		e.maybeDoneMoving(s, id)
 	case MovingDown:
 		e.currentFloor--
+		s.elevatorOnFloor(ElevatorID(id), FloorID(e.currentFloor))
 		e.maybeDoneMoving(s, id)
 	}
 }
