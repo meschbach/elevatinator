@@ -1,15 +1,70 @@
 name: "Run tests on push"
 on: [push]
 jobs:
-  build:
+  verify:
+    timeout-minutes: 5
+    strategy:
+      matrix:
+        go-version: ["1.25"]
+
     runs-on: ubuntu-latest
     name: Golang Unit Tests
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup go
-        uses: actions/setup-go@v4
+      - uses: actions/checkout@v4
         with:
-          go-version: '^1.25'
-      - run: go version
-      - run: go get .
-      - run: go test ./...
+          fetch-depth: 0
+      - name: Setup Go ${{ matrix.go-version }}
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go-version }}
+      - name: Build and run unit tests ${{ matrix.go-version }}
+        run: |
+          go test -count=1 ./...
+      - name: Build and package artifacts
+        run: |
+          ./build-all.sh
+          tar zcvf webservice.tgz cmd/webservice/amd64_linux cmd/webservice/arm64_linux cmd/webservice/amd64_linux cmd/webservice/arm64_linux
+      - name: Archive Artifacts
+        if: "${{ matrix.go-version == '1.25' && contains(github.ref, 'main') }}"
+        uses: actions/upload-artifact@v4
+        with:
+          name: webservices
+          path: "webservice.tgz"
+          if-no-files-found: error
+          retention-days: 10
+  releases:
+    needs: verify
+    if: contains(github.ref, 'main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      packages: write # Grant write permission to packages
+      contents: read # Allow reading the repository content
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Grab artifacts
+        uses: actions/download-artifact@v5
+      - name: Unpack Artifacts
+        run: |
+          tar zxvf webservices.tgz
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push webservices
+        uses: docker/build-push-action@v5
+        with:
+          platforms: "linux/amd64,linux/arm64"
+          file: cmd/webservice/Dockerfile
+          context: .
+          push: true
+          provenance: true
+          tags: |
+            "ghcr.io/${{ github.repository }}:${{ github.sha }}"
