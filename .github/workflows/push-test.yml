@@ -47,7 +47,7 @@ jobs:
         uses: actions/download-artifact@v5
       - name: Unpack Artifacts
         run: |
-          tar zxvf webservices.tgz
+          tar zxvf webservice.tgz
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
