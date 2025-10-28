@@ -1,0 +1,44 @@
+services:
+  webservice:
+    build:
+      context: .
+      dockerfile: cmd/webservice/Dockerfile
+      args:
+        BUILDKIT_INLINE_CACHE: 1
+    environment:
+      ENV: dev-docker-compose
+      OTEL_EXPORTER: grpc
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://devxp_otel:4317"
+      OTEL_EXPORTER_OTLP_INSECURE: "true"
+    volumes:
+      - ./.env.local:/.env.local
+    ports:
+      - "18999:8999"
+#    depends_on:
+#      devxp_otel:
+#        condition: service_healthy
+    command: ["run"]
+  # todo: consider pulling out: https://www.baeldung.com/ops/docker-compose-communication
+  # https://grafana.com/docs/opentelemetry/docker-lgtm/
+#  devxp_otel:
+#    ports:
+#      - "3000:3000"
+#      - "4317:4317"
+#      - "4318:4318"
+#    volumes:
+#      - otel_grafana:/data
+#    environment:
+#      GF_PATHS_DATA: /data/grafana
+#      ENABLE_LOGS_ALL: true
+#    image: docker.io/grafana/otel-lgtm:latest
+#    healthcheck:
+#      test: cat /tmp/ready
+#      interval: 1m
+#      timeout: 10s
+#      retries: 10
+#      start_period: 10s
+#      start_interval: 10s
+
+volumes:
+  primary_postgres_data:
+  otel_grafana:

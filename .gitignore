@@ -189,3 +189,7 @@ $RECYCLE.BIN/
 elevatinator
 /queue
 scenarios
+cmd/webservice/arm64_darwin
+cmd/webservice/amd64_darwin
+cmd/webservice/arm64_linux
+cmd/webservice/amd64_linux

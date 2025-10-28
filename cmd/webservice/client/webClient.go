@@ -109,9 +109,11 @@ func (c *webClient) Do(req *http.Request, v any) error {
 	return nil
 }
 
-func newWebClient() *webClient {
+const DefaultBaseURL = "http://localhost:8999"
+
+func newWebClient(baseURL string) *webClient {
 	return &webClient{
-		baseURL: "http://localhost:8999",
+		baseURL: baseURL,
 		httpClient: &http.Client{
 			Timeout: 2 * time.Second,
 		},

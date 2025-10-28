@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"io"
 	"os"
@@ -15,20 +16,26 @@ func main() {
 	procContext, cancelSignalListeners := signal.NotifyContext(rootContext, os.Interrupt, unix.SIGTERM)
 	defer cancelSignalListeners()
 
-	if err := safeSession(procContext, os.Stdout); err != nil {
+	var baseURL = DefaultBaseURL
+	flag.StringVar(&baseURL, "baseURL", baseURL, "base URL of the web service")
+
+	flag.Parse()
+
+	if err := safeSession(procContext, os.Stdout, baseURL); err != nil {
 		fmt.Fprintf(os.Stderr, "error: %s\n", err.Error())
 		return
 	}
 }
 
-func safeSession(ctx context.Context, log io.Writer) error {
+func safeSession(ctx context.Context, log io.Writer, baseURL string) error {
 	defer func() {
 		if err := recover(); err != nil {
 			fmt.Fprintf(log, "panic: %s", err)
 		}
 	}()
-
-	client := newWebClient()
+	
+	fmt.Printf("Using base URL %q\n", baseURL)
+	client := newWebClient(baseURL)
 	scenarios, err := client.GetScenarios(ctx)
 	if err != nil {
 		return err
