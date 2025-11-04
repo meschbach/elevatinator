@@ -2,4 +2,5 @@
 
 set -e
 
+./build-all.sh
 docker-compose up --build --remove-orphans

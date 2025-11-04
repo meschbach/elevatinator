@@ -7,9 +7,6 @@ services:
         BUILDKIT_INLINE_CACHE: 1
     environment:
       ENV: dev-docker-compose
-      OTEL_EXPORTER: grpc
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://devxp_otel:4317"
-      OTEL_EXPORTER_OTLP_INSECURE: "true"
     volumes:
       - ./.env.local:/.env.local
     ports:
