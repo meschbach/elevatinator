@@ -23,6 +23,9 @@ func OkJSON[T any](value T) *JSONReply[T] {
 }
 
 func (o *JSONReply[T]) Write(w http.ResponseWriter) error {
+	header := w.Header()
+	header.Set("Content-Type", "application/json")
+	header.Set("Content-Encoding", "UTF-8")
 	w.WriteHeader(o.Status)
 	return json.NewEncoder(w).Encode(o.Body)
 }
