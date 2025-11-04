@@ -14,6 +14,7 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/meschbach/elevatinator/pkg/controllers/queue"
 	"github.com/meschbach/elevatinator/pkg/scenarios"
+	"github.com/rs/cors"
 )
 
 func runService(processContext context.Context) {
@@ -57,7 +58,7 @@ func runService(processContext context.Context) {
 	address := ":8999"
 	srv := &http.Server{
 		Addr:    address,
-		Handler: router,
+		Handler: cors.Default().Handler(router),
 	}
 
 	errCh := make(chan error, 1)

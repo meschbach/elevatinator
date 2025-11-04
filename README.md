@@ -48,8 +48,3 @@ Once you are ready to test your new strategy can run it via the following:
 ```bash
 go build . && ./elevatinator
 ```
-
-## Lifecycle stage
-
-This project is very young.  Ideally the following enhancements can be made:
-* gRPC to a controller
