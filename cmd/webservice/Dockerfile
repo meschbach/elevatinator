@@ -23,3 +23,4 @@ USER appuser:appuser
 COPY --chown=appuser:appuser --chmod=ugo=rx cmd/webservice/${TARGETARCH}_linux /webservice
 
 ENTRYPOINT ["/webservice"]
+CMD ["run"]
